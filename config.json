@@ -1,9 +1,9 @@
-﻿{
+{
   "brand": {
-    "name": "НОВОЖИЛ",
+    "name": "Агентство недвижимости НОВОЖИЛ",
     "logo": "logo.svg",
     "primaryColor": "#00897B",
-    "accentColor": "#FBC02D",
+    "accentColor": "#4CAF50",
     "welcomeTitle": "Агентство недвижимости \"НОВОЖИЛ\""
   },
   "texts": {
@@ -15,7 +15,7 @@
     "showWelcomeScreen": true
   },
   "data": {
-    "sheetUrl": "https://docs.google.com/spreadsheets/d/1BxiMvs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit#gid=0"
+    "sheetUrl": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSs0IIptZEaBOyYYnhWKvcpjfhGbcvoASS2qJHEg_B5_ZsxM7cPmuq2XoywHqToe3MLM722DWhfT2wB/pub?output=csv"
   },
   "contact": {
     "botToken": "8782604353:AAETp9ZD6b9q2Ztj-CHZBlUTlFvQxZVI3HI",
