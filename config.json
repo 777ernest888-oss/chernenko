@@ -1,9 +1,9 @@
 {
   "brand": {
-    "name": "Агентство недвижимости НОВОЖИЛ",
+    "name": "АН \"НОВОЖИЛ\"",
     "logo": "logo.svg",
-    "primaryColor": "#00897B",
-    "accentColor": "#4CAF50",
+    "primaryColor": "#66BB6A",
+    "accentColor": "#66BB6A",
     "welcomeTitle": "Агентство недвижимости \"НОВОЖИЛ\""
   },
   "texts": {
