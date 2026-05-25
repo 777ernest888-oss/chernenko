@@ -489,16 +489,13 @@ function initPhoneMask() {
     }
   });
 }
-// === МАСКА ДЛЯ TELEGRAM (латиница + авто @) ===
 function initTelegramMask() {
   const inp = document.getElementById('consultTelegram');
   if (!inp) return;
  
   inp.addEventListener('input', function(e) {
     let val = e.target.value;
-    // Разрешаем только латиницу, цифры, underscore
     val = val.replace(/[^a-zA-Z0-9_]/g, '');
-    // Автоматически добавляем @ в начало если нет
     if (val && val.charAt(0) !== '@') {
       val = '@' + val;
     }
@@ -506,7 +503,6 @@ function initTelegramMask() {
   });
  
   inp.addEventListener('blur', function(e) {
-    // Если поле не пустое и нет @, добавляем
     if (e.target.value && e.target.value.charAt(0) !== '@') {
       e.target.value = '@' + e.target.value;
     }
@@ -537,11 +533,11 @@ function submitConsultForm(e) {
   btn.textContent = 'Отправка...';
   btn.disabled = true;
  
-  // Форматируем цену: если меньше 1000 - это миллионы  let priceValue = '';
+  // ИСПРАВЛЕНИЕ ЦЕНЫ: ОДИН знак рубля
+  let priceValue = '';
   if (typeof item.price_from === 'number') {
     if (item.price_from < 1000) {
-      priceValue = item.price_from + ' млн ₽';
-    } else {
+      priceValue = item.price_from + ' млн ₽';    } else {
       priceValue = item.price_from + ' ₽';
     }
   }
@@ -586,6 +582,7 @@ function escapeHtml(text) {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);} else {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
   init();
 }
