@@ -58,8 +58,12 @@ function appBack() {
 
 // === ЗАПУСК ===
 function startApp() {
-  document.getElementById('welcomeScreen')?.classList.add('hidden');
-  document.getElementById('mainContent')?.classList.remove('hidden');
+  const welcome = document.getElementById('welcomeScreen');
+  const main = document.getElementById('mainContent');
+ 
+  if (welcome) welcome.classList.add('hidden');
+  if (main) main.classList.remove('hidden');
+ 
   window.scrollTo(0, 0);
   hideBack();
 }
@@ -92,11 +96,9 @@ async function init() {
   const welcome = document.getElementById('welcomeScreen');
   const main = document.getElementById('mainContent');
  
-  if (loader) loader.classList.remove('hidden');
- 
-  try {
-    // 1. Загружаем конфиг
-    const configRes = await fetch('config.json?v=' + Date.now());    if (!configRes.ok) throw new Error('Не удалось загрузить config.json');
+  try {    // 1. Загружаем конфиг
+    const configRes = await fetch('config.json?v=' + Date.now());
+    if (!configRes.ok) throw new Error('Не удалось загрузить config.json');
     config = await configRes.json();
    
     // 2. Загружаем таблицу
@@ -110,16 +112,10 @@ async function init() {
     applyBranding();
     initPhoneMask();
    
-    // 4. Принудительно переключаем экраны
+    // 4. Переключаем экраны
     if (loader) loader.classList.add('hidden');
-    if (welcome) {
-      welcome.classList.remove('hidden');
-      console.log('Welcome screen shown');
-    }
-    if (main) {
-      main.classList.add('hidden');
-      console.log('Main content hidden');
-    }
+    if (welcome) welcome.classList.remove('hidden');
+    if (main) main.classList.add('hidden');
    
     // 5. Рисуем список
     renderListings(listings);
@@ -128,10 +124,7 @@ async function init() {
   } catch (error) {
     console.error('Init Error:', error);
     if (loader) loader.classList.add('hidden');
-    if (welcome) {
-      welcome.classList.remove('hidden');
-      console.log('Welcome shown on error');
-    }
+    if (welcome) welcome.classList.remove('hidden');
     if (main) main.classList.add('hidden');
     const container = document.getElementById('listingsContainer');
     if (container) {
@@ -145,14 +138,14 @@ function applyTheme() {
   if (config.brand.primaryColor) document.documentElement.style.setProperty('--primary', config.brand.primaryColor);
   if (config.brand.accentColor) document.documentElement.style.setProperty('--accent', config.brand.accentColor);
 }
+
 function applyBranding() {
   if (!config.brand) return;
   const imgEl = document.getElementById('welcomeImage');
   if (config.brand.welcomeImage && imgEl) {
     imgEl.src = config.brand.welcomeImage + '?v=' + Date.now();
     imgEl.classList.remove('hidden');
-  }
-  const titleEl = document.getElementById('welcomeTitle');
+  }  const titleEl = document.getElementById('welcomeTitle');
   const subtitleEl = document.getElementById('welcomeSubtitle');
   if (config.brand.welcomeTitle && titleEl) titleEl.textContent = config.brand.welcomeTitle;
   if (config.brand.welcomeSubtitle && subtitleEl) subtitleEl.textContent = config.brand.welcomeSubtitle;
@@ -194,14 +187,14 @@ function parseCSVLine(line) {
   let inQ = false;
   for (const c of line) {
     if (c === '"') inQ = !inQ;
-    else if (c === ',' && !inQ) { res.push(cur); cur = ''; }    else cur += c;
+    else if (c === ',' && !inQ) { res.push(cur); cur = ''; }
+    else cur += c;
   }
   res.push(cur);
   return res;
 }
 
-// === ОТРИСОВКА СПИСКА ===
-function renderListings(data) {
+// === ОТРИСОВКА СПИСКА ===function renderListings(data) {
   const cont = document.getElementById('listingsContainer');
   if (!cont) return;
   cont.innerHTML = '';
@@ -234,23 +227,23 @@ function renderListings(data) {
           <span>${escapeHtml(item.district) || ''}</span>
           <span>🚇 ${escapeHtml(item.metro) || ''}</span>
           ${item.rooms ? `<span>🚪 ${escapeHtml(item.rooms)}</span>` : ''}
-          ${area ? `<span>📐 ${escapeHtml(area)}</span>` : ''}
+          ${area ? `<span> ${escapeHtml(area)}</span>` : ''}
         </div>
         <div class="listing-price">от ${price} млн ₽ ${ppsqm ? `<span class="price-per-sqm">~${ppsqm} ₽/м²</span>` : ''}</div>
         <div class="listing-status status-${statusKey}">${statusTxt}</div>
-        <button class="tg-btn consult-btn-inline" onclick="openConsultForm('${item.id}', event)">📞 Получить консультацию</button>
+        <button class="tg-btn consult-btn-inline" onclick="openConsultForm('${item.id}', event)"> Получить консультацию</button>
       </div>
     `;
     cont.appendChild(card);
   });
 }
+
 // === КАРТА ===
 function initMap() {
   if (typeof L === 'undefined') return;
   const cont = document.getElementById('mapContainer');
   if (!cont) return;
-  if (!map) {
-    map = L.map('mapContainer').setView([59.9343, 30.3351], 11);
+  if (!map) {    map = L.map('mapContainer').setView([59.9343, 30.3351], 11);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
   }
   updateMapMarkers(listings);
@@ -292,16 +285,14 @@ function openDetails(id) {
     <div class="meta-row"><span>${escapeHtml(item.completion_soonest || item.completion_all) || ''}</span></div>`;
  
   document.getElementById('modalDescription').textContent = item.description || 'Описание отсутствует';
-    // Преимущества
+ 
   const featuresEl = document.getElementById('modalFeatures');
   if (item.features) {
     featuresEl.innerHTML = `<ul>${item.features.split(',').map(f => `<li>${escapeHtml(f.trim())}</li>`).join('')}</ul>`;
   } else {
     featuresEl.innerHTML = '<p style="color:var(--text-secondary)">Информация уточняется</p>';
   }
- 
-  // Планировки
-  const plansEl = document.getElementById('modalFloorPlans');
+    const plansEl = document.getElementById('modalFloorPlans');
   plansEl.innerHTML = '';
   if (item.floor_plans_text) {
     const t = document.createElement('div');
@@ -325,7 +316,6 @@ function openDetails(id) {
     plansEl.innerHTML = '<p style="color:var(--text-secondary)">Информация уточняется</p>';
   }
  
-  // Галерея фото
   const gallery = document.getElementById('modalGallery');
   gallery.innerHTML = '';
   if (item.image_main) {
@@ -341,9 +331,9 @@ function openDetails(id) {
       img.className = 'modal-thumb';
       img.onclick = () => window.open(url, '_blank');
       gallery.appendChild(img);
-    });  }
+    });
+  }
  
-  // Кнопка консультации
   let btn = document.getElementById('modalConsultBtn');
   if (!btn) {
     btn = document.createElement('button');
@@ -351,8 +341,7 @@ function openDetails(id) {
     btn.className = 'tg-btn modal-cta';
     document.querySelector('#detailsModal .modal-content')?.appendChild(btn);
   }
-  btn.textContent = '📞 Получить консультацию';
-  btn.onclick = () => openConsultForm(id);
+  btn.textContent = '📞 Получить консультацию';  btn.onclick = () => openConsultForm(id);
  
   document.getElementById('detailsModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -390,7 +379,8 @@ function initPhoneMask() {
   if (!inp) return;
  
   inp.addEventListener('input', function(e) {
-    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);    if (!x) return;
+    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
+    if (!x) return;
     e.target.value = !x[2] ? '+7 (' : '+7 (' + x[2] + (x[3] ? ') ' + x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
   });
  
@@ -400,7 +390,6 @@ function initPhoneMask() {
     }
   });
 }
-
 function submitConsultForm(e) {
   e.preventDefault();
  
@@ -410,7 +399,6 @@ function submitConsultForm(e) {
   const name = document.getElementById('consultName').value.trim();
   const phone = document.getElementById('consultPhone').value.trim();
  
-  // Строгая валидация
   if (name.length < 2) { tg?.showAlert('❌ Введите имя (мин. 2 символа)'); return; }
   if (phone.replace(/\D/g, '').length < 10) { tg?.showAlert('❌ Введите корректный номер телефона'); return; }
  
@@ -419,7 +407,6 @@ function submitConsultForm(e) {
   btn.textContent = 'Отправка...';
   btn.disabled = true;
  
-  // Отправка на ОБЩИЙ безопасный скрипт
   fetch(GOOGLE_SCRIPT_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -439,7 +426,8 @@ function submitConsultForm(e) {
     if (d.success) {
       closeConsultModal();
       tg?.showAlert('✅ Заявка отправлена!');
-      e.target.reset();    } else {
+      e.target.reset();
+    } else {
       throw new Error(d.error || 'Ошибка отправки');
     }
   })
@@ -452,7 +440,6 @@ function submitConsultForm(e) {
     btn.disabled = false;
   });
 }
-
 // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
 function escapeHtml(text) {
   if (!text) return '';
