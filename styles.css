@@ -53,7 +53,7 @@ body {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text {
-  color: var(--white);
+  color: white;
   font-size: 18px;
   font-weight: 600;
   animation: pulse 1.5s ease-in-out infinite;
