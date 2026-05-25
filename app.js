@@ -378,7 +378,8 @@ function openDetails(id) {
   document.getElementById('modalMeta').innerHTML =
     '<div class="meta-row"><span>\uD83D\uDCCD ' + (item.address || '') + '</span></div>' +
     '<div class="meta-row"><span>\uD83D\uDE87 ' + (item.metro || '') + '</span></div>' +
-    '<div class="meta-row"><span>' + (item.class || '') + ' \u2022 ' + (item.finishing || '') + '</span></div>' +
+    (item.class ? '<div class="meta-row"><span>\uD83C\uDF1F \u041A\u043B\u0430\u0441\u0441: ' + item.class + '</span></div>' : '') +
+    (item.finishing ? '<div class="meta-row"><span>\uD83D\uDD28 \u041E\u0442\u0434\u0435\u043B\u043A\u0430: ' + item.finishing + '</span></div>' : '') +
     '<div class="meta-row"><span>' + (item.completion_soonest || item.completion_all || '') + '</span></div>';
  
   document.getElementById('modalDescription').textContent = item.description || 'Описание отсутствует';
@@ -389,8 +390,8 @@ function openDetails(id) {
   } else {
     featuresEl.innerHTML = '<p style="color:var(--text-secondary)">Информация уточняется</p>';
   }
- 
-  const plansEl = document.getElementById('modalFloorPlans');  plansEl.innerHTML = '';
+    const plansEl = document.getElementById('modalFloorPlans');
+  plansEl.innerHTML = '';
   if (item.floor_plans_text) {
     const t = document.createElement('div');
     t.className = 'floor-plans-text';
@@ -438,8 +439,8 @@ function openDetails(id) {
   }
  
   document.getElementById('detailsModal').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  showBack();}
+  document.body.style.overflow = 'hidden';  showBack();
+}
 
 function closeModal() {
   document.getElementById('detailsModal').classList.add('hidden');
@@ -487,8 +488,8 @@ function initPhoneMask() {
   });
 }
 
-function submitConsultForm(e) {
-  e.preventDefault(); 
+function submitConsultForm(e) {  e.preventDefault();
+ 
   const item = listings.find(function(l) { return l.id === currentModalId; });
   if (!item) return;
  
@@ -516,7 +517,6 @@ function submitConsultForm(e) {
       projectId: PROJECT_ID,
       title: item.name,
       price: typeof item.price_from === 'number' ? item.price_from : '',
-      city: item.district || '',
       leadName: name,
       leadPhone: phone,
       leadTelegram: 'Не указан'
