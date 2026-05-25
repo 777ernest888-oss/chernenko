@@ -141,11 +141,14 @@ function renderWelcome() {
   if (config.features?.showWelcomeScreen === false) {
     document.getElementById('welcomeScreen')?.classList.add('hidden');
     document.getElementById('mainContent')?.classList.remove('hidden');
+  } else {
+    document.getElementById('welcomeScreen')?.classList.remove('hidden');
+    document.getElementById('mainContent')?.classList.add('hidden');
   }
 }
-
-// === ЗАГРУЗКА ДАННЫХ ИЗ GOOGLE SHEETS (ИСПРАВЛЕНА) ===
-async function loadFromGoogleSheets(url) {  let csvUrl = url.trim();
+// === ЗАГРУЗКА ДАННЫХ ИЗ GOOGLE SHEETS ===
+async function loadFromGoogleSheets(url) {
+  let csvUrl = url.trim();
   csvUrl = csvUrl.replace('/pubhtml', '/pub').replace('/edit', '/pub');
   if (!csvUrl.includes('output=csv')) {
     csvUrl += (csvUrl.includes('?') ? '&' : '?') + 'output=csv';
@@ -191,10 +194,10 @@ function renderListings(data) {
   const cont = document.getElementById('listingsContainer');
   if (!cont) return;
   cont.innerHTML = '';
- 
-  if (!data?.length) {
+    if (!data?.length) {
     cont.innerHTML = `<div class="empty-state">${listings.length ? 'Ничего не найдено' : 'Объекты ещё не добавлены'}</div>`;
-    return;  }
+    return;
+  }
  
   data.forEach((item, index) => {
     let price = '?';
@@ -240,10 +243,10 @@ function initMap() {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
   }
   updateMapMarkers(listings.filter(l => l.active));
-  setTimeout(() => map.invalidateSize(), 150);
-}
+  setTimeout(() => map.invalidateSize(), 150);}
 
-function updateMapMarkers(items) {  if (!map) return;
+function updateMapMarkers(items) {
+  if (!map) return;
   markers.forEach(m => map.removeLayer(m));
   markers = [];
   items.forEach(item => {
@@ -268,7 +271,7 @@ function openDetails(id) {
   document.getElementById('modalPrice').innerHTML = `от <b>${price}</b> млн ₽ ${ppsqm ? `<span class="price-per-sqm">~${ppsqm} ₽/м²</span>` : ''}`;
   document.getElementById('modalMeta').innerHTML = `
     <div class="meta-row"><span>📍 ${escapeHtml(item.address) || ''}</span></div>
-    <div class="meta-row"><span> ${escapeHtml(item.metro) || ''}</span></div>
+    <div class="meta-row"><span>🚇 ${escapeHtml(item.metro) || ''}</span></div>
     <div class="meta-row"><span>${escapeHtml(item.class) || ''} • ${escapeHtml(item.finishing) || ''}</span></div>
     <div class="meta-row"><span>${escapeHtml(item.completion_soonest || item.completion_all) || ''}</span></div>`;
   document.getElementById('modalDescription').textContent = item.description || 'Описание отсутствует';
@@ -285,14 +288,14 @@ function openDetails(id) {
   if (item.images_gallery) { item.images_gallery.split(',').map(u => u.trim()).filter(Boolean).forEach(url => { const img = document.createElement('img'); img.src = url; img.className = 'modal-thumb'; img.onclick = () => window.open(url, '_blank'); gallery.appendChild(img); }); }
   let btn = document.getElementById('modalConsultBtn');
   if (!btn) { btn = document.createElement('button'); btn.id = 'modalConsultBtn'; btn.className = 'tg-btn modal-cta'; document.querySelector('#detailsModal .modal-content')?.appendChild(btn); }
-  btn.textContent = ' Получить консультацию';
+  btn.textContent = '📞 Получить консультацию';
   btn.onclick = () => openConsultForm(id);
   document.getElementById('detailsModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
-  showBack();
-}
+  showBack();}
 
-function closeModal() {  document.getElementById('detailsModal').classList.add('hidden');
+function closeModal() {
+  document.getElementById('detailsModal').classList.add('hidden');
   document.body.style.overflow = '';
   currentModalId = null;
   if (document.getElementById('mapContainer').classList.contains('hidden')) hideBack();
@@ -338,10 +341,10 @@ function submitConsultForm(e) {
   if (phone.replace(/\D/g, '').length < 10) { tg?.showAlert('❌ Введите корректный номер телефона'); return; }
   const btn = e.target.querySelector('button[type="submit"]');
   const orig = btn.textContent;
-  btn.textContent = 'Отправка...'; btn.disabled = true;
-  fetch(GOOGLE_SCRIPT_URL, {
+  btn.textContent = 'Отправка...'; btn.disabled = true;  fetch(GOOGLE_SCRIPT_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },    body: JSON.stringify({ secret: SECRET_KEY, projectId: PROJECT_ID, title: item.name, price: typeof item.price_from === 'number' ? item.price_from : '', city: item.district || '', leadName: name, leadPhone: phone, leadTelegram: 'Не указан' })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ secret: SECRET_KEY, projectId: PROJECT_ID, title: item.name, price: typeof item.price_from === 'number' ? item.price_from : '', city: item.district || '', leadName: name, leadPhone: phone, leadTelegram: 'Не указан' })
   })
   .then(r => r.json())
   .then(d => { if (d.success) { closeConsultModal(); tg?.showAlert('✅ Заявка отправлена!'); e.target.reset(); } else throw new Error(d.error || 'Ошибка'); })
