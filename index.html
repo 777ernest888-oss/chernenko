@@ -7,7 +7,6 @@
   <meta name="theme-color" content="#1a365d">
   <title>Новожилов</title>
 
-  <!-- Заглушка Telegram WebApp -->
   <script>
     window.Telegram = window.Telegram || {};
     window.Telegram.WebApp = window.Telegram.WebApp || {
@@ -33,7 +32,7 @@
     <div class="loading-text">Загружаем объекты...</div>
   </div>
 
-  <!-- 🏠 ПРИВЕТСТВИЕ (Новая структура) -->
+  <!-- 🏠 ПРИВЕТСТВИЕ -->
   <div id="welcomeScreen" class="screen welcome hidden">
    
     <!-- 1. ВЕРХ: Логотип и Название -->
@@ -42,13 +41,13 @@
       <h1 class="welcome-company">Агентство недвижимости НОВОЖИЛОВ</h1>
     </div>
 
-    <!-- 2. СЕРЕДИНА: Фото (полностью) -->
+    <!-- 2. СЕРЕДИНА: Фото -->
     <div class="welcome-media">
       <img id="welcomeImage" class="welcome-img" src="welcome-bg.jpg" alt="Фото">
     </div>
 
-    <!-- 3. НИЗ: Текст и Кнопка -->    <div class="welcome-bottom">
-      <h2 class="welcome-subtitle">Каталог новостроек</h2>
+    <!-- 3. НИЗ: Текст и Кнопка -->
+    <div class="welcome-bottom">      <h2 class="welcome-subtitle">Каталог новостроек</h2>
       <p class="welcome-motto">Квартиры вашей мечты</p>
       <button class="tg-btn" onclick="startApp()" type="button">Начать подбор</button>
     </div>
@@ -61,6 +60,35 @@
       <span class="back-arrow">←</span> Назад
     </button>
 
+    <!-- ФИЛЬТРЫ -->
+    <div class="filters-toggle">
+      <button class="filters-toggle-btn" onclick="toggleFilters()" type="button">🔽 Фильтры</button>
+    </div>
+    <div id="filtersBlock" class="filters-block hidden">
+      <div class="filter-group">
+        <label>💰 Цена до (млн ₽)</label>
+        <div class="price-buttons">
+          <button class="price-btn" data-price="5">До 5 млн</button>
+          <button class="price-btn" data-price="10">До 10 млн</button>
+          <button class="price-btn" data-price="20">До 20 млн</button>
+          <button class="price-btn" data-price="50">До 50 млн</button>
+          <button class="price-btn" data-price="100">До 100 млн</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>📍 Районы</label>
+        <div id="districtCheckboxes" class="checkbox-group"></div>
+      </div>
+      <div class="filter-group">
+        <label>🚇 Метро</label>
+        <div id="metroCheckboxes" class="checkbox-group"></div>
+      </div>
+      <div class="filter-group">
+        <label>🚪 Комнаты</label>
+        <div id="roomsCheckboxes" class="checkbox-group"></div>
+      </div>
+    </div>
+
     <div class="view-toggle">
       <button id="listViewBtn" class="view-btn active" onclick="switchView('list')" type="button">📋 Список</button>
       <button id="mapViewBtn" class="view-btn" onclick="switchView('map')" type="button">🗺️ Карта</button>
@@ -69,8 +97,7 @@
     <div id="listingsContainer" class="listings"></div>
     <div id="mapContainer" class="map-container hidden"></div>
   </div>
-
-  <!--  МОДАЛЬНОЕ ОКНО ДЕТАЛЕЙ -->
+  <!-- 🏢 МОДАЛЬНОЕ ОКНО ДЕТАЛЕЙ -->
   <div id="detailsModal" class="modal hidden">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()" type="button">✕</button>
@@ -97,6 +124,7 @@
       <button id="modalConsultBtn" class="tg-btn modal-cta" type="button">📞 Получить консультацию</button>
     </div>
   </div>
+
   <!-- 📞 МОДАЛЬНОЕ ОКНО ЗАЯВКИ -->
   <div id="consultModal" class="modal hidden">
     <div class="modal-content">
@@ -113,7 +141,6 @@
     </div>
   </div>
 
-  <!-- Leaflet + Наш скрипт -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
   <script src="app.js?v=5"></script>
 </body>
