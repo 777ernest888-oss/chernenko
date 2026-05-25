@@ -38,16 +38,24 @@ function showBack() {
   const btn = document.getElementById('customBackBtn');
   if (btn) btn.classList.remove('hidden');
 }
+
 function hideBack() {
   const btn = document.getElementById('customBackBtn');
   if (btn) btn.classList.add('hidden');
 }
+
 function appBack() {
-  if (!document.getElementById('consultModal').classList.contains('hidden')) return closeConsultModal();
-  if (!document.getElementById('detailsModal').classList.contains('hidden')) return closeModal();
-  if (!document.getElementById('mapContainer').classList.contains('hidden')) return switchView('list');
+  if (!document.getElementById('consultModal').classList.contains('hidden')) {
+    return closeConsultModal();
+  }  if (!document.getElementById('detailsModal').classList.contains('hidden')) {
+    return closeModal();
+  }
+  if (!document.getElementById('mapContainer').classList.contains('hidden')) {
+    return switchView('list');
+  }
   if (tg.close) tg.close();
 }
+
 // === ЗАПУСК ===
 function startApp() {
   document.getElementById('welcomeScreen')?.classList.add('hidden');
@@ -84,19 +92,19 @@ async function init() {
   const welcome = document.getElementById('welcomeScreen');
   const main = document.getElementById('mainContent');
  
-  loader?.classList.remove('hidden');
+  if (loader) loader.classList.remove('hidden');
  
   try {
     // 1. Загружаем конфиг
-    const configRes = await fetch('config.json?v=' + Date.now());
-    if (!configRes.ok) throw new Error('Не удалось загрузить config.json');
+    const configRes = await fetch('config.json?v=' + Date.now());    if (!configRes.ok) throw new Error('Не удалось загрузить config.json');
     config = await configRes.json();
    
     // 2. Загружаем таблицу
     if (config.data?.sheetUrl) {
       listings = await loadFromGoogleSheets(config.data.sheetUrl);
       console.log('Загружено объектов:', listings.length);
-    }   
+    }
+   
     // 3. Применяем настройки
     applyTheme();
     applyBranding();
@@ -104,16 +112,26 @@ async function init() {
    
     // 4. Принудительно переключаем экраны
     if (loader) loader.classList.add('hidden');
-    if (welcome) welcome.classList.remove('hidden');
-    if (main) main.classList.add('hidden');
+    if (welcome) {
+      welcome.classList.remove('hidden');
+      console.log('Welcome screen shown');
+    }
+    if (main) {
+      main.classList.add('hidden');
+      console.log('Main content hidden');
+    }
    
-    // 5. Рисуем список (появится после кнопки "Начать подбор")
+    // 5. Рисуем список
     renderListings(listings);
+    console.log('Listings rendered:', listings.length);
    
   } catch (error) {
     console.error('Init Error:', error);
     if (loader) loader.classList.add('hidden');
-    if (welcome) welcome.classList.remove('hidden');
+    if (welcome) {
+      welcome.classList.remove('hidden');
+      console.log('Welcome shown on error');
+    }
     if (main) main.classList.add('hidden');
     const container = document.getElementById('listingsContainer');
     if (container) {
@@ -127,7 +145,6 @@ function applyTheme() {
   if (config.brand.primaryColor) document.documentElement.style.setProperty('--primary', config.brand.primaryColor);
   if (config.brand.accentColor) document.documentElement.style.setProperty('--accent', config.brand.accentColor);
 }
-
 function applyBranding() {
   if (!config.brand) return;
   const imgEl = document.getElementById('welcomeImage');
@@ -145,7 +162,8 @@ function applyBranding() {
 async function loadFromGoogleSheets(url) {
   let csvUrl = url.trim();
   csvUrl = csvUrl.replace('/pubhtml', '/pub').replace('/edit', '/pub');
-  if (!csvUrl.includes('output=csv')) {    csvUrl += (csvUrl.includes('?') ? '&' : '?') + 'output=csv';
+  if (!csvUrl.includes('output=csv')) {
+    csvUrl += (csvUrl.includes('?') ? '&' : '?') + 'output=csv';
   }
   const response = await fetch(csvUrl + '&_t=' + Date.now());
   if (!response.ok) throw new Error(`Таблица недоступна (статус ${response.status})`);
@@ -176,8 +194,7 @@ function parseCSVLine(line) {
   let inQ = false;
   for (const c of line) {
     if (c === '"') inQ = !inQ;
-    else if (c === ',' && !inQ) { res.push(cur); cur = ''; }
-    else cur += c;
+    else if (c === ',' && !inQ) { res.push(cur); cur = ''; }    else cur += c;
   }
   res.push(cur);
   return res;
@@ -194,7 +211,8 @@ function renderListings(data) {
     return;
   }
  
-  data.forEach((item, index) => {    let price = '?';
+  data.forEach((item, index) => {
+    let price = '?';
     if (typeof item.price_from === 'number') {
       price = item.price_from < 1000 ? item.price_from.toFixed(1) : (item.price_from / 1000000).toFixed(1);
     }
@@ -226,7 +244,6 @@ function renderListings(data) {
     cont.appendChild(card);
   });
 }
-
 // === КАРТА ===
 function initMap() {
   if (typeof L === 'undefined') return;
@@ -243,7 +260,8 @@ function initMap() {
 function updateMapMarkers(items) {
   if (!map) return;
   markers.forEach(m => map.removeLayer(m));
-  markers = [];  items.forEach(item => {
+  markers = [];
+  items.forEach(item => {
     if (!item.lat || !item.lng) return;
     let p = '?';
     if (typeof item.price_from === 'number') p = item.price_from < 1000 ? item.price_from.toFixed(1) : (item.price_from / 1000000).toFixed(1);
@@ -274,8 +292,7 @@ function openDetails(id) {
     <div class="meta-row"><span>${escapeHtml(item.completion_soonest || item.completion_all) || ''}</span></div>`;
  
   document.getElementById('modalDescription').textContent = item.description || 'Описание отсутствует';
- 
-  // Преимущества
+    // Преимущества
   const featuresEl = document.getElementById('modalFeatures');
   if (item.features) {
     featuresEl.innerHTML = `<ul>${item.features.split(',').map(f => `<li>${escapeHtml(f.trim())}</li>`).join('')}</ul>`;
@@ -292,7 +309,8 @@ function openDetails(id) {
     t.textContent = item.floor_plans_text;
     plansEl.appendChild(t);
   }
-  if (item.floor_plans_images) {    const g = document.createElement('div');
+  if (item.floor_plans_images) {
+    const g = document.createElement('div');
     g.className = 'floor-plans-gallery';
     item.floor_plans_images.split(',').map(u => u.trim()).filter(Boolean).forEach(url => {
       const img = document.createElement('img');
@@ -323,8 +341,7 @@ function openDetails(id) {
       img.className = 'modal-thumb';
       img.onclick = () => window.open(url, '_blank');
       gallery.appendChild(img);
-    });
-  }
+    });  }
  
   // Кнопка консультации
   let btn = document.getElementById('modalConsultBtn');
@@ -341,6 +358,7 @@ function openDetails(id) {
   document.body.style.overflow = 'hidden';
   showBack();
 }
+
 function closeModal() {
   document.getElementById('detailsModal').classList.add('hidden');
   document.body.style.overflow = '';
@@ -372,8 +390,7 @@ function initPhoneMask() {
   if (!inp) return;
  
   inp.addEventListener('input', function(e) {
-    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
-    if (!x) return;
+    let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);    if (!x) return;
     e.target.value = !x[2] ? '+7 (' : '+7 (' + x[2] + (x[3] ? ') ' + x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
   });
  
@@ -390,7 +407,8 @@ function submitConsultForm(e) {
   const item = listings.find(l => l.id === currentModalId);
   if (!item) return;
  
-  const name = document.getElementById('consultName').value.trim();  const phone = document.getElementById('consultPhone').value.trim();
+  const name = document.getElementById('consultName').value.trim();
+  const phone = document.getElementById('consultPhone').value.trim();
  
   // Строгая валидация
   if (name.length < 2) { tg?.showAlert('❌ Введите имя (мин. 2 символа)'); return; }
@@ -406,8 +424,8 @@ function submitConsultForm(e) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      secret: SECRET_KEY,           // ← Проверка на бэкенде
-      projectId: PROJECT_ID,        // ← 'novozhilov' для маршрутизации
+      secret: SECRET_KEY,
+      projectId: PROJECT_ID,
       title: item.name,
       price: typeof item.price_from === 'number' ? item.price_from : '',
       city: item.district || '',
@@ -421,8 +439,7 @@ function submitConsultForm(e) {
     if (d.success) {
       closeConsultModal();
       tg?.showAlert('✅ Заявка отправлена!');
-      e.target.reset();
-    } else {
+      e.target.reset();    } else {
       throw new Error(d.error || 'Ошибка отправки');
     }
   })
@@ -439,7 +456,8 @@ function submitConsultForm(e) {
 // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
 function escapeHtml(text) {
   if (!text) return '';
-  const d = document.createElement('div');  d.textContent = text;
+  const d = document.createElement('div');
+  d.textContent = text;
   return d.innerHTML;
 }
 
