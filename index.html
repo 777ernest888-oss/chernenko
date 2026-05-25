@@ -15,25 +15,27 @@
   </div>
 
   <!-- СТАРТОВЫЙ ЭКРАН -->
-<div id="welcomeScreen" class="screen welcome hidden">
-  <div class="welcome-brand">
-    <img src="logo.svg" alt="Logo" class="logo">
-    <div class="brand-name">НОВОЖИЛОВ КАТАЛОГ</div>
+  <div id="welcomeScreen" class="screen welcome hidden">
+    <div class="welcome-brand">
+      <!-- ИСПРАВЛЕНО: logo.svg -->
+      <img src="logo.svg" alt="Logo" class="logo">
+      <div class="brand-name">НОВОЖИЛОВ КАТАЛОГ</div>
+    </div>
+    <div class="welcome-media">
+      <!-- ИСПРАВЛЕНО: welcome-bg.jpg -->
+      <img id="welcomeImage" src="welcome-bg.jpg" alt="Welcome">
+    </div>
+    <div class="welcome-text">
+      <h1>НАДЁЖНЫЙ ДОХОДНЫЙ</h1>
+      <p>Готовый Арендный Бизнес</p>
+    </div>
+    <button class="btn-start" onclick="startApp()">ЗДЕСЬ</button>
   </div>
-  <div class="welcome-media">
-    <img id="welcomeImage" src="welcome-bg.jpg" alt="Welcome">
-  </div>
-  <div class="welcome-text">
-    <h1>НАДЁЖНЫЙ ДОХОДНЫЙ</h1>
-    <p>Готовый Арендный Бизнес</p>
-  </div>
-  <button class="btn-start" onclick="startApp()">ЗДЕСЬ</button>
-</div>
 
   <!-- ОСНОВНОЙ ЭКРАН -->
   <div id="mainScreen" class="screen main hidden">
     <header class="main-header">
-      <h2>🏢 Новожилов Каталог</h2>
+      <h2> Новожилов Каталог</h2>
     </header>
     <div id="objectsList" class="list"></div>
   </div>
@@ -55,7 +57,7 @@
       </div>
 
       <div id="leadForm" class="hidden" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
-        <h3 style="margin-bottom: 15px; text-align: center;">📝 Оставить заявку</h3>
+        <h3 style="margin-bottom: 15px; text-align: center;"> Оставить заявку</h3>
         <div class="input-group">
           <label>Ваше имя *</label>
           <input type="text" id="leadName" placeholder="Иван">
