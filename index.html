@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Агентство недвижимости Новожилов. Каталог объектов.">
+  <meta name="description" content="Агентство недвижимости Новожилов. Каталог новостроек.">
   <meta name="theme-color" content="#1a365d">
   <title>Новожилов</title>
 
-  <!-- Заглушка Telegram WebApp (чтобы не висело) -->
+  <!-- Заглушка Telegram WebApp -->
   <script>
     window.Telegram = window.Telegram || {};
     window.Telegram.WebApp = window.Telegram.WebApp || {
@@ -23,7 +23,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
  
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="styles.css?v=1">
+  <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
 
@@ -35,19 +35,28 @@
 
   <!-- 🏠 ПРИВЕТСТВИЕ -->
   <div id="welcomeScreen" class="screen welcome hidden">
-    <div class="welcome-media">
-      <img id="welcomeImage" class="welcome-img hidden" src="welcome-bg.jpg?v=1" alt="Welcome">
+    <!-- Верхняя часть: Лого + Название -->
+    <div class="welcome-header">
+      <img src="logo.svg" class="welcome-logo" alt="Логотип">
+      <h1 class="welcome-company">Агентство недвижимости НОВОЖИЛОВ</h1>
     </div>
-    <div class="welcome-bottom">
-      <h1 id="welcomeTitle">Агентство недвижимости Новожилов</h1>
-      <p id="welcomeSubtitle">Каталог объектов</p>
+
+    <!-- Фото -->
+    <div class="welcome-media">
+      <img id="welcomeImage" class="welcome-img" src="welcome-bg.jpg" alt="Фото">
+    </div>
+
+    <!-- Нижняя часть -->
+    <div class="welcome-bottom">      <h2 class="welcome-subtitle">Каталог новостроек</h2>
+      <p class="welcome-motto">Квартиры вашей мечты</p>
       <button class="tg-btn" onclick="startApp()" type="button">Начать подбор</button>
     </div>
   </div>
 
   <!-- 📋 ОСНОВНОЙ КОНТЕНТ -->
   <div id="mainContent" class="screen main hidden">
-    <button id="customBackBtn" class="header-back-btn hidden" onclick="appBack()" type="button">      <span class="back-arrow">←</span> Назад
+    <button id="customBackBtn" class="header-back-btn hidden" onclick="appBack()" type="button">
+      <span class="back-arrow">←</span> Назад
     </button>
 
     <div class="view-toggle">
@@ -64,10 +73,7 @@
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()" type="button">✕</button>
       <h2 id="modalTitle"></h2>
-     
-      <!-- 🖼 Слайдер фото -->
       <div id="modalGallery" class="modal-gallery"></div>
-     
       <div id="modalPrice" class="modal-price"></div>
       <div id="modalMeta" class="modal-meta"></div>
     
@@ -81,22 +87,21 @@
         <div id="modalFeatures"></div>
       </div>
 
-      <!-- 🏗 Слайдер планировок -->
       <div class="modal-section">
-        <h3>📐 Планировки</h3>
+        <h3> Планировки</h3>
         <div id="modalFloorPlans"></div>
       </div>
 
-      <button id="modalConsultBtn" class="tg-btn modal-cta" type="button">📞 Получить консультацию</button>
+      <button id="modalConsultBtn" class="tg-btn modal-cta" type="button"> Получить консультацию</button>
     </div>
   </div>
 
-  <!-- 📞 МОДАЛЬНОЕ ОКНО ЗАЯВКИ -->
-  <div id="consultModal" class="modal hidden">
+  <!-- 📞 МОДАЛЬНОЕ ОКНО ЗАЯВКИ -->  <div id="consultModal" class="modal hidden">
     <div class="modal-content">
       <button class="close-btn" onclick="closeConsultModal()" type="button">✕</button>
       <h2>Заказать консультацию</h2>
-      <p class="form-hint">Оставьте контакты — мы перезвоним</p>      <div id="consultObjectName" class="form-object">🏢 Объект</div>
+      <p class="form-hint">Оставьте контакты — мы перезвоним</p>
+      <div id="consultObjectName" class="form-object">🏢 Объект</div>
     
       <form id="consultForm" onsubmit="submitConsultForm(event)" class="form-modal">
         <input type="text" id="consultName" placeholder="Ваше имя" required>
@@ -108,6 +113,6 @@
 
   <!-- Leaflet + Наш скрипт -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=1"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
