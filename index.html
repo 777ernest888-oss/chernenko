@@ -3,83 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Новожилов Каталог</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Агентство недвижимости Новожилов. Каталог объектов.">
+  <meta name="theme-color" content="#1a365d">
+  <title>Новожилов</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="styles.css?v=1">
 </head>
 <body>
 
-  <!-- ЭКРАН ЗАГРУЗКИ -->
-  <div id="loadingScreen" class="loading-screen">
-    <div class="spinner"></div>
-    <div>⏳ Загружаем объекты...</div>
+  <!-- 🔄 ЭКРАН ЗАГРУЗКИ -->
+  <div id="loadingScreen" class="loading-screen hidden">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Загружаем объекты...</div>
   </div>
 
-  <!-- СТАРТОВЫЙ ЭКРАН -->
+  <!-- 🏠 ПРИВЕТСТВИЕ -->
   <div id="welcomeScreen" class="screen welcome hidden">
-    <div class="welcome-brand">
-      <!-- ИСПРАВЛЕНО: logo.svg -->
-      <img src="logo.svg" alt="Logo" class="logo">
-      <div class="brand-name">НОВОЖИЛОВ КАТАЛОГ</div>
-    </div>
     <div class="welcome-media">
-      <!-- ИСПРАВЛЕНО: welcome-bg.jpg -->
-      <img id="welcomeImage" src="welcome-bg.jpg" alt="Welcome">
+      <!-- ИСПРАВЛЕНО: правильные имена файлов -->
+      <img id="welcomeImage" class="welcome-img hidden" src="welcome-bg.jpg?v=1" alt="Welcome">
     </div>
-    <div class="welcome-text">
-      <h1>НАДЁЖНЫЙ ДОХОДНЫЙ</h1>
-      <p>Готовый Арендный Бизнес</p>
+    <div class="welcome-bottom">
+      <!-- ИСПРАВЛЕНО: правильный текст -->
+      <h1 id="welcomeTitle">Агентство недвижимости Новожилов</h1>
+      <p id="welcomeSubtitle">Каталог объектов</p>
+      <button class="tg-btn" onclick="startApp()" type="button">Начать подбор</button>
     </div>
-    <button class="btn-start" onclick="startApp()">ЗДЕСЬ</button>
   </div>
 
-  <!-- ОСНОВНОЙ ЭКРАН -->
-  <div id="mainScreen" class="screen main hidden">
-    <header class="main-header">
-      <h2> Новожилов Каталог</h2>
-    </header>
-    <div id="objectsList" class="list"></div>
-  </div>
+  <!--  ОСНОВНОЙ КОНТЕНТ (без изменений, как в идеальном файле) -->
+  <div id="mainContent" class="screen main hidden">
+    <button id="customBackBtn" class="header-back-btn hidden" onclick="appBack()" type="button">
+      <span class="back-arrow">←</span> Назад
+    </button>
 
-  <!-- МОДАЛЬНОЕ ОКНО -->
-  <div id="modalOverlay" class="modal-overlay hidden" onclick="closeModal(event)">
-    <div class="modal" onclick="event.stopPropagation()">
-      <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="view-toggle">
+      <button id="listViewBtn" class="view-btn active" onclick="switchView('list')" type="button">📋 Список</button>
+      <button id="mapViewBtn" class="view-btn" onclick="switchView('map')" type="button">🗺️ Карта</button>
+    </div>
+
+    <div id="listingsContainer" class="listings"></div>
+    <div id="mapContainer" class="map-container hidden"></div>
+  </div>
+  <!--  МОДАЛЬНОЕ ОКНО ДЕТАЛЕЙ (со слайдерами) -->
+  <div id="detailsModal" class="modal hidden">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeModal()" type="button">✕</button>
+      <h2 id="modalTitle"></h2>
      
-      <div id="objectDetails">
-        <img id="modalImg" class="modal-img" src="" alt="">
-        <h2 id="modalTitle"></h2>
-        <div class="modal-price" id="modalPrice"></div>
-        <div class="modal-yield" id="modalYield"></div>
-        <div class="modal-section">
-          <h3>📖 Описание</h3>
-          <p id="modalDesc"></p>
-        </div>
+      <!-- 🖼 Слайдер фото -->
+      <div id="modalGallery" class="modal-gallery"></div>
+     
+      <div id="modalPrice" class="modal-price"></div>
+      <div id="modalMeta" class="modal-meta"></div>
+    
+      <div class="modal-section">
+        <h3>📖 Описание</h3>
+        <div id="modalDescription"></div>
       </div>
 
-      <div id="leadForm" class="hidden" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
-        <h3 style="margin-bottom: 15px; text-align: center;"> Оставить заявку</h3>
-        <div class="input-group">
-          <label>Ваше имя *</label>
-          <input type="text" id="leadName" placeholder="Иван">
-        </div>
-        <div class="input-group">
-          <label>Телефон *</label>
-          <input type="tel" id="leadPhone" placeholder="+7 (999) 000-00-00">
-        </div>
-        <div class="input-group">
-          <label>Telegram (необязательно)</label>
-          <input type="text" id="leadTelegram" placeholder="@username">
-        </div>
-        <button class="tg-btn" id="submitLeadBtn" onclick="submitLead()">Отправить заявку</button>
-        <button class="tg-btn secondary" style="margin-top: 8px;" onclick="cancelLead()">Отмена</button>
+      <div class="modal-section">
+        <h3>✨ Преимущества</h3>
+        <div id="modalFeatures"></div>
       </div>
 
-      <div id="modalActions" class="modal-actions">
-        <button class="tg-btn" onclick="openLeadForm()">📞 Забронировать</button>
+      <!-- 🏗 Слайдер планировок -->
+      <div class="modal-section">
+        <h3>📐 Планировки</h3>
+        <div id="modalFloorPlans"></div>
       </div>
+
+      <button id="modalConsultBtn" class="tg-btn modal-cta" type="button">📞 Получить консультацию</button>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <!-- 📞 МОДАЛЬНОЕ ОКНО ЗАЯВКИ -->
+  <div id="consultModal" class="modal hidden">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeConsultModal()" type="button">✕</button>
+      <h2>Заказать консультацию</h2>
+      <p class="form-hint">Оставьте контакты — мы перезвоним</p>
+      <div id="consultObjectName" class="form-object">🏢 Объект</div>
+    
+      <form id="consultForm" onsubmit="submitConsultForm(event)" class="form-modal">
+        <input type="text" id="consultName" placeholder="Ваше имя" required>
+        <input type="tel" id="consultPhone" placeholder="+7 (___) ___-__-__" required>
+        <button type="submit" class="tg-btn">Отправить заявку</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Leaflet + Наш скрипт -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>  <script src="app.js?v=1"></script>
 </body>
 </html>
