@@ -34,12 +34,12 @@ body {
 
 /* === ЗАГРУЗКА === */
 .loading-screen {
-  position: fixed !important;
-  top: 0 !important; left: 0 !important;
-  width: 100vw !important; height: 100vh !important;
-  background: var(--primary) !important;
-  z-index: 9999 !important;
-  display: flex !important;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: var(--primary);
+  z-index: 9999;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -66,26 +66,62 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100vh;
   padding: 20px;
   background: var(--bg);
+  overflow-y: auto;
+}
+.welcome-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 0 8px;
+}
+.welcome-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+.welcome-company {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.2;
 }
 .welcome-media {
-  width: 100%; max-width: 320px;
+  width: 100%;
+  max-width: 340px;
   margin-bottom: 24px;
   border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  overflow: hidden;  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
-.welcome-img, .welcome-video {
-  width: 100%; height: auto; max-height: 55vh;
-  object-fit: cover; display: block;
+.welcome-img {
+  width: 100%;
+  height: auto;
+  max-height: 50vh;
+  object-fit: cover;
+  display: block;
 }
-.welcome-video.hidden, .welcome-img.hidden { display: none !important; }
-.welcome-bottom { text-align: center; width: 100%; max-width: 320px; }
-#welcomeTitle { font-size: 24px; font-weight: 700; margin-bottom: 8px; color: var(--primary); }
-#welcomeSubtitle { font-size: 15px; color: var(--text-secondary); margin-bottom: 24px; }
+.welcome-bottom {
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 40px;
+}
+.welcome-subtitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+.welcome-motto {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
 
 /* === КНОПКИ === */
 .tg-btn {
@@ -97,6 +133,7 @@ body {
   box-shadow: 0 2px 8px rgba(26, 54, 93, 0.3);
 }
 .tg-btn:active { transform: scale(0.98); }
+
 /* === КНОПКА НАЗАД === */
 .header-back-btn {
   position: fixed; top: 12px; left: 12px; z-index: 2001;
@@ -108,31 +145,7 @@ body {
 .header-back-btn.hidden { display: none !important; }
 .header-back-btn:active { transform: scale(0.95); }
 
-/* === ФИЛЬТРЫ === */
-.filters-toggle { padding: 12px 16px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
-.filters-toggle-btn { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 8px 14px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 14px; }
-.filters-block { background: var(--card-bg); padding: 14px 16px; border-bottom: 1px solid var(--border); max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-.filters-block:not(.hidden) { max-height: 600px; }
-.filter-group { margin-bottom: 14px; }
-.filter-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-
-.price-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-.price-btn { flex: 1; min-width: 60px; padding: 8px; border: 1px solid var(--border); background: var(--card-bg); border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.2s; }
-.price-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-.checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; }
-.checkbox-label {
-  display: inline-flex; align-items: center;
-  background: #f0f4f8; padding: 8px 12px; border-radius: 8px;
-  font-size: 14px; cursor: pointer; user-select: none;
-  transition: all 0.2s ease; border: 2px solid transparent;
-}
-.checkbox-label:hover { background: #e2e8f0; }
-.checkbox-label input[type="checkbox"] { margin-right: 6px; width: 16px; height: 16px; accent-color: var(--primary); }
-.checkbox-label:has(input:checked) { background: var(--primary); color: white; border-color: var(--primary); }
-
-/* === ПЕРЕКЛЮЧАТЕЛЬ ВИДА === */
-.view-toggle { display: flex; gap: 8px; margin: 16px 16px 0; }
+/* === ПЕРЕКЛЮЧАТЕЛЬ ВИДА === */.view-toggle { display: flex; gap: 8px; margin: 16px 16px 0; }
 .view-btn { flex: 1; padding: 12px; border: 2px solid var(--border); background: var(--card-bg); border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
 .view-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
@@ -145,7 +158,8 @@ body {
   animation: fadeInUp 0.4s ease forwards;
 }
 .listing-card:active { transform: scale(0.99); }
-.listing-image { width: 100%; height: 200px; object-fit: cover; background: #e2e8f0; }.listing-info { padding: 16px; }
+.listing-image { width: 100%; height: 200px; object-fit: cover; background: #e2e8f0; }
+.listing-info { padding: 16px; }
 .listing-info h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: var(--primary); }
 .listing-meta { display: flex; gap: 12px; font-size: 14px; color: var(--text-secondary); margin-bottom: 12px; flex-wrap: wrap; }
 .listing-price { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
@@ -180,8 +194,7 @@ body {
 }
 .modal:not(.hidden) { opacity: 1; pointer-events: auto; }
 .modal-content {
-  background: white; min-height: 100%; padding: 20px; position: relative;
-  transform: scale(0.95) translateY(10px); transition: transform 0.3s ease;
+  background: white; min-height: 100%; padding: 20px; position: relative;  transform: scale(0.95) translateY(10px); transition: transform 0.3s ease;
 }
 .modal:not(.hidden) .modal-content { transform: scale(1) translateY(0); }
 
@@ -194,7 +207,8 @@ body {
 }
 .close-btn:hover { background: white; transform: scale(1.05); }
 
-/* 🖼 КАРУСЕЛЬ ФОТО */.modal-gallery {
+/* 🖼 КАРУСЕЛЬ ФОТО */
+.modal-gallery {
   display: flex; flex-direction: row; overflow-x: auto;
   scroll-snap-type: x mandatory; gap: 10px; padding: 10px 0 20px 0;
   scrollbar-width: none; -ms-overflow-style: none;
@@ -230,7 +244,6 @@ body {
   border: 2px solid var(--border); transition: all 0.2s; background: white;
 }
 .floor-plan-image:hover { border-color: var(--primary); transform: translateY(-2px); }
-
 /* ФОРМА */
 .form-object { font-weight: 600; margin-bottom: 8px; color: var(--primary); }
 .form-hint { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; }
@@ -242,7 +255,8 @@ body {
 
 /* Responsive */
 @media (max-width: 360px) {
-  .welcome-img, .welcome-video { max-height: 45vh; }
-  #welcomeTitle { font-size: 22px; }  .listing-info h3 { font-size: 16px; }
-  .modal-header h2 { font-size: 20px; }
+  .welcome-img { max-height: 45vh; }
+  .welcome-company { font-size: 16px; }
+  .welcome-subtitle { font-size: 20px; }
+  .listing-info h3 { font-size: 16px; }
 }
