@@ -93,27 +93,22 @@ async function init() {
   const main = document.getElementById('mainContent');
  
   try {
-    // 1. Загружаем конфиг
     const configRes = await fetch('config.json?v=' + Date.now());
     if (!configRes.ok) throw new Error('Не удалось загрузить config.json');
-    config = await configRes.json();   
-    // 2. Загружаем таблицу
-    if (config.data?.sheetUrl) {
+    config = await configRes.json();
+        if (config.data?.sheetUrl) {
       listings = await loadFromGoogleSheets(config.data.sheetUrl);
       console.log('Загружено объектов:', listings.length);
     }
    
-    // 3. Применяем настройки
     applyTheme();
     applyBranding();
     initPhoneMask();
    
-    // 4. Принудительно скрываем загрузку и показываем приветствие
     if (loader) loader.classList.add('hidden');
     if (welcome) welcome.classList.remove('hidden');
     if (main) main.classList.add('hidden');
    
-    // 5. Рисуем список (он появится после нажатия "Начать подбор")
     renderListings(listings);
    
   } catch (error) {
@@ -146,21 +141,11 @@ function applyBranding() {
   if (config.brand.welcomeTitle && titleEl) titleEl.textContent = config.brand.welcomeTitle;
   if (config.brand.welcomeSubtitle && subtitleEl) subtitleEl.textContent = config.brand.welcomeSubtitle;
 }
-function renderWelcome() {
-  if (config.features?.showWelcomeScreen === false) {
-    document.getElementById('welcomeScreen')?.classList.add('hidden');
-    document.getElementById('mainContent')?.classList.remove('hidden');
-  } else {
-    document.getElementById('welcomeScreen')?.classList.remove('hidden');
-    document.getElementById('mainContent')?.classList.add('hidden');
-  }
-}
 
 // === ЗАГРУЗКА ДАННЫХ ИЗ GOOGLE SHEETS ===
 async function loadFromGoogleSheets(url) {
   let csvUrl = url.trim();
-  csvUrl = csvUrl.replace('/pubhtml', '/pub').replace('/edit', '/pub');
-  if (!csvUrl.includes('output=csv')) {
+  csvUrl = csvUrl.replace('/pubhtml', '/pub').replace('/edit', '/pub');  if (!csvUrl.includes('output=csv')) {
     csvUrl += (csvUrl.includes('?') ? '&' : '?') + 'output=csv';
   }
   const response = await fetch(csvUrl + '&_t=' + Date.now());
@@ -194,7 +179,8 @@ function parseCSVLine(line) {
     if (c === '"') inQ = !inQ;
     else if (c === ',' && !inQ) { res.push(cur); cur = ''; }
     else cur += c;
-  }  res.push(cur);
+  }
+  res.push(cur);
   return res;
 }
 
@@ -208,8 +194,7 @@ function renderListings(data) {
     cont.innerHTML = `<div class="empty-state">${listings.length ? 'Ничего не найдено' : 'Объекты ещё не добавлены'}</div>`;
     return;
   }
- 
-  data.forEach((item, index) => {
+    data.forEach((item, index) => {
     let price = '?';
     if (typeof item.price_from === 'number') {
       price = item.price_from < 1000 ? item.price_from.toFixed(1) : (item.price_from / 1000000).toFixed(1);
@@ -243,7 +228,8 @@ function renderListings(data) {
   });
 }
 
-// === КАРТА ===function initMap() {
+// === КАРТА ===
+function initMap() {
   if (typeof L === 'undefined') return;
   const cont = document.getElementById('mapContainer');
   if (!cont) return;
@@ -257,8 +243,7 @@ function renderListings(data) {
 
 function updateMapMarkers(items) {
   if (!map) return;
-  markers.forEach(m => map.removeLayer(m));
-  markers = [];
+  markers.forEach(m => map.removeLayer(m));  markers = [];
   items.forEach(item => {
     if (!item.lat || !item.lng) return;
     let p = '?';
@@ -292,7 +277,8 @@ function openDetails(id) {
   if (item.floor_plans_text) { const t = document.createElement('div'); t.className = 'floor-plans-text'; t.textContent = item.floor_plans_text; plansEl.appendChild(t); }
   if (item.floor_plans_images) { const g = document.createElement('div'); g.className = 'floor-plans-gallery'; item.floor_plans_images.split(',').map(u => u.trim()).filter(Boolean).forEach(url => { const img = document.createElement('img'); img.src = url; img.className = 'floor-plan-image'; img.onclick = () => window.open(url, '_blank'); g.appendChild(img); }); plansEl.appendChild(g); }
   if (!item.floor_plans_text && !item.floor_plans_images) plansEl.innerHTML = '<p style="color:var(--text-secondary)">Информация уточняется</p>';
-  const gallery = document.getElementById('modalGallery');  gallery.innerHTML = '';
+  const gallery = document.getElementById('modalGallery');
+  gallery.innerHTML = '';
   if (item.image_main) { const img = document.createElement('img'); img.src = item.image_main; img.className = 'modal-main-image'; gallery.appendChild(img); }
   if (item.images_gallery) { item.images_gallery.split(',').map(u => u.trim()).filter(Boolean).forEach(url => { const img = document.createElement('img'); img.src = url; img.className = 'modal-thumb'; img.onclick = () => window.open(url, '_blank'); gallery.appendChild(img); }); }
   let btn = document.getElementById('modalConsultBtn');
@@ -306,8 +292,7 @@ function openDetails(id) {
 
 function closeModal() {
   document.getElementById('detailsModal').classList.add('hidden');
-  document.body.style.overflow = '';
-  currentModalId = null;
+  document.body.style.overflow = '';  currentModalId = null;
   if (document.getElementById('mapContainer').classList.contains('hidden')) hideBack();
 }
 
@@ -341,7 +326,8 @@ function initPhoneMask() {
   inp.addEventListener('focus', function(e) { if (e.target.value === '' || e.target.value === '+7 ') e.target.value = '+7 ('; });
 }
 
-function submitConsultForm(e) {  e.preventDefault();
+function submitConsultForm(e) {
+  e.preventDefault();
   const item = listings.find(l => l.id === currentModalId);
   if (!item) return;
   const name = document.getElementById('consultName').value.trim();
@@ -355,8 +341,7 @@ function submitConsultForm(e) {  e.preventDefault();
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ secret: SECRET_KEY, projectId: PROJECT_ID, title: item.name, price: typeof item.price_from === 'number' ? item.price_from : '', city: item.district || '', leadName: name, leadPhone: phone, leadTelegram: 'Не указан' })
-  })
-  .then(r => r.json())
+  })  .then(r => r.json())
   .then(d => { if (d.success) { closeConsultModal(); tg?.showAlert('✅ Заявка отправлена!'); e.target.reset(); } else throw new Error(d.error || 'Ошибка'); })
   .catch(err => tg?.showAlert('⚠️ ' + err.message))
   .finally(() => { btn.textContent = orig; btn.disabled = false; });
