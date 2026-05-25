@@ -23,7 +23,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
  
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
 
@@ -33,24 +33,26 @@
     <div class="loading-text">Загружаем объекты...</div>
   </div>
 
-  <!-- 🏠 ПРИВЕТСТВИЕ -->
+  <!-- 🏠 ПРИВЕТСТВИЕ (Новая структура) -->
   <div id="welcomeScreen" class="screen welcome hidden">
-    <!-- Верхняя часть: Лого + Название -->
+   
+    <!-- 1. ВЕРХ: Логотип и Название -->
     <div class="welcome-header">
-      <img src="logo.svg" class="welcome-logo" alt="Логотип">
+      <img src="logo.svg" class="welcome-logo" alt="Лого">
       <h1 class="welcome-company">Агентство недвижимости НОВОЖИЛОВ</h1>
     </div>
 
-    <!-- Фото -->
+    <!-- 2. СЕРЕДИНА: Фото (полностью) -->
     <div class="welcome-media">
       <img id="welcomeImage" class="welcome-img" src="welcome-bg.jpg" alt="Фото">
     </div>
 
-    <!-- Нижняя часть -->
-    <div class="welcome-bottom">      <h2 class="welcome-subtitle">Каталог новостроек</h2>
+    <!-- 3. НИЗ: Текст и Кнопка -->    <div class="welcome-bottom">
+      <h2 class="welcome-subtitle">Каталог новостроек</h2>
       <p class="welcome-motto">Квартиры вашей мечты</p>
       <button class="tg-btn" onclick="startApp()" type="button">Начать подбор</button>
     </div>
+
   </div>
 
   <!-- 📋 ОСНОВНОЙ КОНТЕНТ -->
@@ -68,7 +70,7 @@
     <div id="mapContainer" class="map-container hidden"></div>
   </div>
 
-  <!-- 🏢 МОДАЛЬНОЕ ОКНО ДЕТАЛЕЙ -->
+  <!--  МОДАЛЬНОЕ ОКНО ДЕТАЛЕЙ -->
   <div id="detailsModal" class="modal hidden">
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()" type="button">✕</button>
@@ -88,15 +90,15 @@
       </div>
 
       <div class="modal-section">
-        <h3> Планировки</h3>
+        <h3>📐 Планировки</h3>
         <div id="modalFloorPlans"></div>
       </div>
 
-      <button id="modalConsultBtn" class="tg-btn modal-cta" type="button"> Получить консультацию</button>
+      <button id="modalConsultBtn" class="tg-btn modal-cta" type="button">📞 Получить консультацию</button>
     </div>
   </div>
-
-  <!-- 📞 МОДАЛЬНОЕ ОКНО ЗАЯВКИ -->  <div id="consultModal" class="modal hidden">
+  <!-- 📞 МОДАЛЬНОЕ ОКНО ЗАЯВКИ -->
+  <div id="consultModal" class="modal hidden">
     <div class="modal-content">
       <button class="close-btn" onclick="closeConsultModal()" type="button">✕</button>
       <h2>Заказать консультацию</h2>
@@ -113,6 +115,6 @@
 
   <!-- Leaflet + Наш скрипт -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
