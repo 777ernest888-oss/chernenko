@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Юрий Черненко. Человеческий риэлтор">
+  <meta name="theme-color" content="#1a365d">
+  <title>Черненко</title>
+
+  <script>
+    window.Telegram = window.Telegram || {};
+    window.Telegram.WebApp = window.Telegram.WebApp || {
+      ready: function() {},
+      expand: function() {},
+      MainButton: { setText: function() {}, show: function() {}, hide: function() {} },
+      showAlert: function(msg) { alert(msg); },
+      openLink: function(url) { window.open(url, '_blank'); },
+      initDataUnsafe: { user: {} },
+      close: function() { window.close(); }
+    };
+  </script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+ 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="styles.css?v=13">
+</head>
+<body>
+
+  <div id="loadingScreen" class="loading-screen hidden">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Загружаем объекты...</div>
+  </div>
+
+  <div id="welcomeScreen" class="screen welcome hidden">
+    <div class="welcome-header">
+      <img src="logo.svg" class="welcome-logo" alt="Лого">
+      <h1 class="welcome-company">Агентство недвижимости НОВОЖИЛОВ</h1>
+    </div>
+    <div class="welcome-media">
+      <img id="welcomeImage" class="welcome-img" src="welcome-bg.jpg" alt="Фото">
+    </div>
+    <div class="welcome-bottom">
+      <h2 class="welcome-subtitle">Каталог новостроек</h2>
+      <p class="welcome-motto">Квартиры вашей мечты</p>
+      <button class="tg-btn" id="startBtn" type="button">Начать подбор</button>
+    </div>
+  </div>
+
+  <div id="mainContent" class="screen main hidden">
+    <!-- ИСПРАВЛЕНИЕ: onclick="appBack()" вместо closeModal() -->    <button id="customBackBtn" class="header-back-btn hidden" onclick="appBack()" type="button" style="z-index: 9999; pointer-events: auto;">
+      <span class="back-arrow">←</span> Назад
+    </button>
+
+    <div class="filters-toggle">
+      <button class="filters-toggle-btn" onclick="toggleFilters()" type="button"> Фильтры</button>
+    </div>
+    <div id="filtersBlock" class="filters-block hidden">
+      <div class="filter-group">
+        <label>💰 Цена до (млн ₽)</label>
+        <div class="price-buttons" id="priceButtons"></div>
+      </div>
+      <div class="filter-group">
+        <label>📍 Районы</label>
+        <div id="districtCheckboxes" class="checkbox-group"></div>
+      </div>
+      <div class="filter-group">
+        <label>🚇 Метро</label>
+        <div id="metroCheckboxes" class="checkbox-group"></div>
+      </div>
+      <div class="filter-group">
+        <label> Комнаты</label>
+        <div id="roomsCheckboxes" class="checkbox-group"></div>
+      </div>
+    </div>
+
+    <div class="view-toggle">
+      <button id="listViewBtn" class="view-btn active" onclick="switchView('list')" type="button"> Список</button>
+      <button id="mapViewBtn" class="view-btn" onclick="switchView('map')" type="button">🗺️ Карта</button>
+    </div>
+
+    <div id="listingsContainer" class="listings"></div>
+    <div id="mapContainer" class="map-container hidden"></div>
+  </div>
+
+  <div id="detailsModal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="modalTitle"></h2>
+      <div id="modalGallery" class="modal-gallery"></div>
+      <div id="modalPrice" class="modal-price"></div>
+      <div id="modalMeta" class="modal-meta"></div>
+    
+      <div class="modal-section">
+        <h3>📖 Описание</h3>
+        <div id="modalDescription"></div>
+      </div>
+
+      <div class="modal-section">
+        <h3>✨ Преимущества</h3>
+        <div id="modalFeatures"></div>      </div>
+
+      <div class="modal-section">
+        <h3>📐 Планировки</h3>
+        <div id="modalFloorPlans"></div>
+      </div>
+
+      <button id="modalConsultBtn" class="tg-btn modal-cta" type="button">📞 Получить консультацию</button>
+    </div>
+  </div>
+
+  <div id="consultModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Заказать консультацию</h2>
+      <p class="form-hint">Оставьте контакты — мы перезвоним</p>
+      <div id="consultObjectName" class="form-object">🏢 Объект</div>
+    
+      <form id="consultForm" onsubmit="submitConsultForm(event)" class="form-modal">
+        <input type="text" id="consultName" placeholder="Ваше имя" required>
+        <input type="tel" id="consultPhone" placeholder="+7 (___) ___-__-__" required>
+        <input type="text" id="consultTelegram" placeholder="@username (Telegram)" autocomplete="off">
+        <button type="submit" class="tg-btn">Отправить заявку</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+  <script src="app.js?v=13"></script>
+</body>
+</html>
